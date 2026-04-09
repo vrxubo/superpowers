@@ -1,0 +1,61 @@
+name: Sync Upstream
+
+on:
+  workflow_dispatch:
+    inputs:
+      upstream_branch:
+        description: "Upstream branch to sync from"
+        required: false
+        default: "main"
+      target_branch:
+        description: "Fork branch to sync to"
+        required: false
+        default: "main"
+  schedule:
+    # 03:20 UTC every day
+    - cron: "20 3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/obra/superpowers.git
+          git remote -v
+
+      - name: Fetch upstream
+        run: |
+          UPSTREAM_BRANCH="${{ github.event.inputs.upstream_branch || 'main' }}"
+          git fetch upstream "$UPSTREAM_BRANCH"
+
+      - name: Fast-forward target branch from upstream
+        run: |
+          TARGET_BRANCH="${{ github.event.inputs.target_branch || 'main' }}"
+          UPSTREAM_BRANCH="${{ github.event.inputs.upstream_branch || 'main' }}"
+
+          # Ensure target branch exists locally
+          git checkout "$TARGET_BRANCH" || git checkout -b "$TARGET_BRANCH" "origin/$TARGET_BRANCH"
+          git merge --ff-only "upstream/$UPSTREAM_BRANCH"
+
+      - name: Push synchronized branch
+        run: |
+          TARGET_BRANCH="${{ github.event.inputs.target_branch || 'main' }}"
+          git push origin "$TARGET_BRANCH"

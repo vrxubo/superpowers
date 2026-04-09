@@ -109,6 +109,46 @@ Full workflow execution test (~10-30 minutes):
   - Tests pass
   - Proper git commits created
 
+### Standalone Real-World Validation Runner
+
+#### test-real-world-skill-validation.sh
+Runs a real-world skill validation scenario against an external target repository and auto-generates a report.
+
+```bash
+cd tests/claude-code
+
+# GREEN run (enforce skill)
+./test-real-world-skill-validation.sh \
+  --target-repo /absolute/path/to/real-project \
+  --skill superpowers:standards-context-retrieval \
+  --scenario feature
+
+# RED baseline run (no skill enforcement)
+./test-real-world-skill-validation.sh \
+  --target-repo /absolute/path/to/real-project \
+  --skill superpowers:standards-context-retrieval \
+  --scenario feature \
+  --baseline
+```
+
+Artifacts are written to `docs/testing-reports/<run-label>/`:
+- `prompt.txt`
+- `claude-output.txt`
+- `report.md`
+- `meta.txt`
+
+Use `analyze-real-world-skill-validation.py` directly for re-analysis:
+
+```bash
+python3 tests/claude-code/analyze-real-world-skill-validation.py \
+  --session-file ~/.claude/projects/<escaped-dir>/<session>.jsonl \
+  --skill superpowers:standards-context-retrieval \
+  --scenario feature \
+  --target-repo /absolute/path/to/real-project \
+  --run-label rerun-1 \
+  --report-file docs/testing-reports/rerun-1/report.md
+```
+
 **What it tests:**
 - The workflow actually works end-to-end
 - Our improvements are actually applied
