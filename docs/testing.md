@@ -403,3 +403,42 @@ Then compare reports and update target skill with evidence-mapped changes:
 Use the V2 template for consistent RED/GREEN fairness control, pass/fail gates, and evidence-mapped REFACTOR inputs:
 
 - `docs/templates/real-world-skill-validation-v2.md`
+
+## Skill Validation: project-standards-authoring
+
+Validation attempted with RED -> GREEN runners:
+
+- RED report: `docs/testing-reports/project-standards-authoring-red/report.md`
+- GREEN report: `docs/testing-reports/project-standards-authoring-green/report.md`
+
+Key checks configured in the runner:
+
+- Propose 2-3 classification schemes before artifact generation
+- Require explicit human scheme selection before progressing
+- Require per-type retrieval framing (`standards-context-retrieval` / Constraints Summary)
+- Verify output path intents (`.cursor/rules/`, `docs/checklist/`, `reuse-inventory`)
+
+Environment note:
+
+- These runs were executed from Cursor where `claude -p` endpoint was unavailable (`404 page not found`), so both runs were marked `SKIPPED` by the runner's environment guard.
+- Re-run these commands in a working Claude Code runtime to collect behavioral evidence:
+  - `TIMEOUT_SECONDS=20 ./tests/claude-code/test-project-standards-authoring.sh red`
+  - `TIMEOUT_SECONDS=20 ./tests/claude-code/test-project-standards-authoring.sh green`
+
+### Cursor-specific RED/GREEN (supplemental)
+
+To keep validation moving in Cursor-only environments, we also captured a Cursor harness RED/GREEN pair:
+
+- Cursor RED report: `docs/testing-reports/project-standards-authoring-cursor-red/report.md`
+- Cursor GREEN report: `docs/testing-reports/project-standards-authoring-cursor-green/report.md`
+
+Artifacts include raw response captures:
+
+- `docs/testing-reports/project-standards-authoring-cursor-red/assistant-output.md`
+- `docs/testing-reports/project-standards-authoring-cursor-green/assistant-output.md`
+
+What this supplemental run verifies:
+
+- RED shows the expected failure mode (no classification gate, no retrieval framing).
+- GREEN shows stage-gated behavior and required output path discipline.
+- Both runs are suitable for behavior-shaping evidence when Claude CLI is unavailable.
