@@ -51,6 +51,12 @@ Determine the most likely implementation surface:
 
 If uncertain, scan target files first and infer from nearby patterns.
 
+For refactor requests framed as "align with project standards", also classify:
+
+- Business page type (list/detail/workbench/form/wizard, etc.)
+- Naming semantics expected by that type
+- Whether existing naming/layout is carrying wrong semantics
+
 ### 2) Retrieve standards in strict priority order
 
 Gather standards from highest-authority to local conventions:
@@ -75,6 +81,8 @@ Create a short "Constraints Summary" before implementation with:
 Only include constraints supported by retrieved sources.
 If no sources are found for a category, write "none found" explicitly.
 
+When the user provides runtime evidence (screenshots/logs/repro steps), add an "Observed Runtime Facts" subsection and treat those facts as mandatory constraints for diagnosis and verification.
+
 ### 4) Implement against constraints
 
 While coding, actively check each change against the summary:
@@ -82,6 +90,7 @@ While coding, actively check each change against the summary:
 - Does naming/path/layout match local conventions?
 - Are required tests or verification steps included?
 - Are any forbidden shortcuts being introduced?
+- For refactors, do names and folder semantics match business intent (not just structural similarity)?
 
 When constraints conflict, apply the priority order and state which source won.
 
@@ -115,6 +124,8 @@ Use narrow, high-signal retrieval first, then expand only if needed:
 
 - `docs/testing.md`
 - `docs/**/*.md` where feature/process guidance exists
+- `openspec/**/*.md` where feature/process guidance exists
+- `specs/**/*.md` where feature/process guidance exists
 - `skills/**/SKILL.md` for workflow constraints
 - Top-level readmes and contributor guidance files
 
@@ -135,6 +146,8 @@ Constraints Summary
 - Must Avoid:
   - <anti-pattern 1>
   - <anti-pattern 2>
+- Observed Runtime Facts:
+  - <fact from logs/screenshots/repro; write "none found" if none>
 - Verification Required:
   - <tests/checks to run>
 ```
@@ -160,6 +173,8 @@ If no relevant standards are found:
 
 Never fabricate project policy.
 
+If standards are ambiguous for naming or structure, prefer business-semantic naming over generic placeholders (for example, avoid defaulting to `List`/`Form` when the page is not a list/form workflow).
+
 ## Rationalization Table
 
 | Excuse | Reality |
@@ -169,6 +184,8 @@ Never fabricate project policy.
 | "Mental checklist is enough" | Non-explicit constraints are not auditable and are easy to skip. |
 | "Generic best practices should be fine" | Local repository rules override generic defaults. |
 | "I'll read standards after coding" | That is retrofitting, not standards-constrained implementation. |
+| "This looks like a list-style refactor, I'll use List naming" | Structural pattern matching is not enough; naming must reflect business semantics. |
+| "Dev mode works, so build/test environments should be fine" | Environment parity must be verified from build artifacts and target-mode execution. |
 
 ## Red Flags - Stop and Restart
 
@@ -177,6 +194,8 @@ Never fabricate project policy.
 - You only used generic guidance and no local sources
 - You skipped verification constraints because of time pressure
 - You wrote "follow project style" without listing concrete constraints
+- You used generic `List`/`Form` naming without validating business semantics
+- You claimed "fixed" from dev behavior only, without checking build/test artifacts when relevant
 
 All red flags mean: stop, retrieve standards, rebuild Constraints Summary, then continue.
 
@@ -187,6 +206,8 @@ All red flags mean: stop, retrieve standards, rebuild Constraints Summary, then 
 - Citing standards without mapping them to actual code changes
 - Expanding retrieval too broadly and losing focus
 - Treating "mental checklist" as equivalent to explicit constraints
+- Overfitting to familiar page scaffolds and misnaming business components
+- Validating only development mode for changes that affect chunking/lazy-loading/build outputs
 
 ## Quick Checklist
 
@@ -195,3 +216,5 @@ All red flags mean: stop, retrieve standards, rebuild Constraints Summary, then 
 - [ ] Constraints Summary written before implementation
 - [ ] Implementation aligned with constraints
 - [ ] Final compliance check reported
+- [ ] Refactor naming/layout validated against business semantics
+- [ ] If build/runtime-sensitive, verification includes non-dev artifacts or environment
