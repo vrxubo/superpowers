@@ -258,3 +258,11 @@ Suggested scenario coverage:
 ## Open Questions
 
 None for this design scope.
+
+---
+
+## Update: 2026-04-13 — Docs Restructure
+
+Rules files path changed from `.cursor/rules/${type}.md` to `docs/rules/${type}.md`.
+All standards artifacts now live under `docs/` with an auto-generated index in `agent.md`.
+See: `2026-04-13-project-standards-authoring-docs-restructure-design.md`.
