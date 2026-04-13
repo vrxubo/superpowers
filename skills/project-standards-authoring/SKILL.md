@@ -19,7 +19,7 @@ NO STANDARDS ARTIFACTS BEFORE A HUMAN SELECTS A CLASSIFICATION SCHEME
 
 If your human partner has not explicitly chosen one of the proposed schemes, you STOP. You do not write or update:
 
-- `.cursor/rules/${type}.md`
+- `docs/rules/${type}.md`
 - `docs/checklist/${type}.md`
 - `docs/guides/how-to-create-${type}.md`
 - `docs/resources/reuse-inventory.md`
@@ -78,7 +78,7 @@ For each `${type}` in the human-selected scheme:
 
 | Artifact | Path |
 |----------|------|
-| Rules | `.cursor/rules/${type}.md` |
+| Rules | `docs/rules/${type}.md` |
 | Checklist | `docs/checklist/${type}.md` |
 | Creation guide (conditional) | `docs/guides/how-to-create-${type}.md` |
 
@@ -105,7 +105,31 @@ Always produce or update:
 
 One global file for the whole run. Merge carefully if it already exists; do not fork multiple inventories.
 
-### 5) Run quality gates (blocking)
+### 5) Update agent.md index
+
+After all artifacts are generated, maintain an index section in the project root's `agent.md`:
+
+**Index block format:**
+
+```markdown
+<!-- BEGIN standards-index -->
+## Project Standards
+
+| Type | Rules | Checklist | Guide |
+|------|-------|-----------|-------|
+| api  | [Rules](docs/rules/api.md) | [Checklist](docs/checklist/api.md) | — |
+<!-- END standards-index -->
+```
+
+**Behavior:**
+
+- If `agent.md` exists and contains `<!-- BEGIN standards-index -->` and `<!-- END standards-index -->` markers: replace all content between them with the new index block (excluding the markers themselves).
+- If `agent.md` exists but markers are not found: append the full index block (including markers) at the end of the file.
+- If `agent.md` does not exist: create it with the full index block as its initial content.
+- Table rows must include one row per selected `${type}`, sorted alphabetically by type name.
+- Columns: `Type`, `Rules`, `Checklist`, `Guide`. Show `—` for artifacts not generated (e.g., no creation guide for a type).
+
+### 6) Run quality gates (blocking)
 
 Do not claim completion if any gate fails. Fix artifacts and re-run checks.
 
@@ -117,8 +141,9 @@ Do not claim completion if any gate fails. Fix artifacts and re-run checks.
 | Language | Soft, non-operational policy ("elegant", "clean", "reasonable") without a testable meaning |
 | Honest gaps | Missing project standard exists but you implied a policy instead of "none found" / explicit gap |
 | Localization | Output language does not match human-requested language without explicit conflict handling |
+| Agent Index | Any generated type lacks a corresponding row in the `agent.md` index table |
 
-### 6) Delivery summary
+### 7) Delivery summary
 
 Report:
 
@@ -135,8 +160,9 @@ digraph project_standards_authoring {
     "Propose 2-3 schemes" [shape=box];
     "Human picked one?" [shape=diamond];
     "Per type: standards-context-retrieval + Constraints Summary" [shape=box];
-    "Write rules + checklist (+ optional how-to)" [shape=box];
+    "Write docs/rules/${type}.md + docs/checklist/${type}.md (+ optional how-to)" [shape=box];
     "Write reuse-inventory.md" [shape=box];
+    "Update agent.md index" [shape=box];
     "Quality gates" [shape=box];
     "Delivery summary" [shape=doublecircle];
 
@@ -144,9 +170,10 @@ digraph project_standards_authoring {
     "Propose 2-3 schemes" -> "Human picked one?";
     "Human picked one?" -> "Propose 2-3 schemes" [label="no: STOP"];
     "Human picked one?" -> "Per type: standards-context-retrieval + Constraints Summary" [label="yes"];
-    "Per type: standards-context-retrieval + Constraints Summary" -> "Write rules + checklist (+ optional how-to)";
-    "Write rules + checklist (+ optional how-to)" -> "Write reuse-inventory.md";
-    "Write reuse-inventory.md" -> "Quality gates";
+    "Per type: standards-context-retrieval + Constraints Summary" -> "Write docs/rules/${type}.md + docs/checklist/${type}.md (+ optional how-to)";
+    "Write docs/rules/${type}.md + docs/checklist/${type}.md (+ optional how-to)" -> "Write reuse-inventory.md";
+    "Write reuse-inventory.md" -> "Update agent.md index";
+    "Update agent.md index" -> "Quality gates";
     "Quality gates" -> "Delivery summary";
 }
 ```
@@ -165,6 +192,7 @@ digraph project_standards_authoring {
 | "Missing standards means I should infer best practice" | Write explicit gaps; do not fabricate policy. |
 | "I can skip rules header; `Scope` is enough" | Missing objective/usage/out-of-scope causes ambiguous applicability; gate fails. |
 | "User asked Chinese but I will keep English for consistency" | Language decision must follow user request or explicit conflict resolution. |
+| "agent.md index is optional" | The index is required for agent discoverability; gate fails if index is missing or incomplete. |
 
 ## Red Flags - Stop and Restart
 
@@ -178,6 +206,7 @@ digraph project_standards_authoring {
 - You invented constraints where sources said "none found"
 - You wrote rules without objective/when-to-use/out-of-scope header profile
 - You ignored a user language request without explicit conflict handling
+- You did not update `agent.md` index or index is missing/incomplete after generating artifacts
 
 **All red flags mean:** stop, return to the earliest failed gate, and repair before proceeding.
 
