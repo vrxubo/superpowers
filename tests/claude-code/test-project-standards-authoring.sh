@@ -127,8 +127,8 @@ if [[ "$MODE" == "green" ]]; then
     fail=1
   fi
 
-  if ! rg -q -F '.cursor/rules/' "$OUTPUT_FILE" 2>/dev/null; then
-    echo "FAIL: expected .cursor/rules/ in output." >&2
+  if ! rg -q -F 'docs/rules/' "$OUTPUT_FILE" 2>/dev/null; then
+    echo "FAIL: expected docs/rules/ in output." >&2
     fail=1
   fi
 
@@ -139,6 +139,21 @@ if [[ "$MODE" == "green" ]]; then
 
   if ! rg -q -i -e 'reuse-inventory' -e 'reuse inventory' "$OUTPUT_FILE" 2>/dev/null; then
     echo "FAIL: expected reuse-inventory (or reuse inventory) in output." >&2
+    fail=1
+  fi
+
+  if ! rg -q -F '<!-- BEGIN standards-index -->' "$OUTPUT_FILE" 2>/dev/null; then
+    echo "FAIL: expected standards-index BEGIN marker in output." >&2
+    fail=1
+  fi
+
+  if ! rg -q -F '<!-- END standards-index -->' "$OUTPUT_FILE" 2>/dev/null; then
+    echo "FAIL: expected standards-index END marker in output." >&2
+    fail=1
+  fi
+
+  if ! rg -q -F 'agent.md' "$OUTPUT_FILE" 2>/dev/null; then
+    echo "FAIL: expected agent.md reference in output." >&2
     fail=1
   fi
 
@@ -176,6 +191,29 @@ else
     echo "$skill_matches"
   else
     echo "INFO: No standards-context-retrieval or Constraints Summary matches (rg)."
+  fi
+
+  rules_matches=$(
+    rg -n -F 'docs/rules/' "$OUTPUT_FILE" 2>/dev/null || true
+  )
+  if [[ -n "$rules_matches" ]]; then
+    echo "INFO: docs/rules/ path mentions (rg):"
+    echo "$rules_matches"
+  else
+    echo "INFO: No docs/rules/ path mentions (rg)."
+  fi
+
+  agent_md_matches=$(
+    rg -n -i \
+      -e 'standards-index' \
+      -e 'agent\.md' \
+      "$OUTPUT_FILE" 2>/dev/null || true
+  )
+  if [[ -n "$agent_md_matches" ]]; then
+    echo "INFO: agent.md / standards-index mentions (rg):"
+    echo "$agent_md_matches"
+  else
+    echo "INFO: No agent.md / standards-index mentions (rg)."
   fi
 fi
 
