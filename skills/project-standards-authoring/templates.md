@@ -7,7 +7,26 @@ Replace `${type}` with the English `kebab-case` code type name. Fill from reposi
 ## 1) Rules - `.cursor/rules/${type}.md`
 
 ```markdown
+---
+description: Project standards for ${type}
+globs:
+  - "**/${type}/**"
+alwaysApply: false
+---
+
 # ${type} - Project Rules
+
+## Rule Objective
+- What this ruleset protects:
+-
+
+## When to Use
+- Apply this ruleset when:
+-
+
+## Out of Scope
+- Do not apply this ruleset when:
+-
 
 ## Scope
 - What this type covers (paths, modules, boundaries):
@@ -33,6 +52,23 @@ Constraints:
 
 - Each rule MUST map to at least one source path in `Sources`.
 - Ban soft language without operational meaning (for example: "keep it elegant").
+- Rules are incomplete without `Rule Objective`, `When to Use`, and `Out of Scope`.
+
+Chinese header variant (when user requests Chinese prose):
+
+```markdown
+## 规则目标
+- 该规则集要保护什么:
+-
+
+## 何时使用
+- 适用场景:
+-
+
+## 不适用范围
+- 以下场景不应用本规则集:
+-
+```
 
 ---
 

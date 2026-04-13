@@ -43,6 +43,14 @@ Do not use when:
 
 ## Required Workflow
 
+### 0) Confirm output language before artifact generation
+
+Before writing any artifact, confirm and state the output language decision:
+
+- Mirror the human partner's requested language for document prose.
+- Keep `${type}` filenames in English `kebab-case` for path stability.
+- If repository policy requires ASCII-only outputs, surface this conflict explicitly and ask for decision before proceeding.
+
 ### 1) Scan and propose 2-3 classification schemes
 
 Scan code and docs relevant to standards generation. Produce **at least two and at most three** distinct classification schemes (for example: by layer, by business domain, by change kind).
@@ -76,6 +84,12 @@ For each `${type}` in the human-selected scheme:
 
 Use section structures and constraints from `templates.md` in this directory.
 
+Rules files are incomplete unless they include a header profile section with:
+
+- Rule objective
+- When to use
+- Out of scope
+
 **Creation guide trigger** (generate only if yes):
 
 - The type spans multiple files beyond a trivial single-file surface, OR
@@ -99,9 +113,10 @@ Do not claim completion if any gate fails. Fix artifacts and re-run checks.
 |------|----------------|
 | Evidence | Any `Must` rule lacks a mapped source path under `Sources` |
 | Checklist mapping | Any `Must` rule lacks at least one checklist item |
+| Rules header | Missing objective / when-to-use / out-of-scope header profile |
 | Language | Soft, non-operational policy ("elegant", "clean", "reasonable") without a testable meaning |
 | Honest gaps | Missing project standard exists but you implied a policy instead of "none found" / explicit gap |
-| ASCII | Non-ASCII characters in generated artifacts when this repo expects ASCII |
+| Localization | Output language does not match human-requested language without explicit conflict handling |
 
 ### 6) Delivery summary
 
@@ -148,6 +163,8 @@ digraph project_standards_authoring {
 | "Checklist can be high level" | Every `Must` needs a concrete, checkable mapping. |
 | "Sources can be vague" | Rules without paths are not auditable; gate fails. |
 | "Missing standards means I should infer best practice" | Write explicit gaps; do not fabricate policy. |
+| "I can skip rules header; `Scope` is enough" | Missing objective/usage/out-of-scope causes ambiguous applicability; gate fails. |
+| "User asked Chinese but I will keep English for consistency" | Language decision must follow user request or explicit conflict resolution. |
 
 ## Red Flags - Stop and Restart
 
@@ -159,6 +176,8 @@ digraph project_standards_authoring {
 - You cited rules without repository evidence paths
 - You used non-operational or purely aesthetic policy language
 - You invented constraints where sources said "none found"
+- You wrote rules without objective/when-to-use/out-of-scope header profile
+- You ignored a user language request without explicit conflict handling
 
 **All red flags mean:** stop, return to the earliest failed gate, and repair before proceeding.
 
