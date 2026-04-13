@@ -4,9 +4,11 @@ Replace `${type}` with the English `kebab-case` code type name. Fill from reposi
 
 ---
 
-## 1) Rules - `.cursor/rules/${type}.md`
+## 1) Rules - `docs/rules/${type}.md`
 
 ```markdown
+Path: docs/rules/${type}.md
+
 ---
 description: Project standards for ${type}
 globs:
@@ -93,7 +95,7 @@ Chinese header variant (when user requests Chinese prose):
 Constraints:
 
 - Items MUST be checkable (observable outcome, command, or review gate).
-- Every `Must` rule in `.cursor/rules/${type}.md` MUST appear in at least one checklist item (reference rule id or quote the Must line).
+- Every `Must` rule in `docs/rules/${type}.md` MUST appear in at least one checklist item (reference rule id or quote the Must line).
 
 ---
 
@@ -122,7 +124,7 @@ Constraints:
 
 Constraint:
 
-- Focus on how to create this module type. Do NOT paste the full rules document; link or point to `.cursor/rules/${type}.md` instead.
+- Focus on how to create this module type. Do NOT paste the full rules document; link or point to `docs/rules/${type}.md` instead.
 
 ---
 
