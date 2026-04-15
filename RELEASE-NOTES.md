@@ -1,6 +1,56 @@
 # Superpowers Release Notes
 
-## v5.0.7 (2026-03-31)
+## v5.1.0 (2026-04-15)
+
+### New Skills
+
+**Harness Environment** — a structured project environment for running AI agent harnesses with consistent tooling, memory, and feedback loops.
+
+- **harness-knowledge-discovery** — skill that determines what knowledge docs an agent needs to work stably on complex tasks, now also creates `CLAUDE.md`/`AGENTS.md` with a Harness index and core table
+- **harness-feedback-loop** — skill for collecting execution evidence, recording failure or success patterns, and updating project memory after task completion
+- **harness post-task hooks** — added hooks for Cursor (`.cursor/hooks/harness-post-task.sh`) and Claude Code (`.claude/hooks/harness-post-task.sh`) that run after each agent task
+
+### Codex Plugin Mirroring
+
+**sync-to-codex-plugin** — new script that clones a fork, opens a PR, and regenerates Codex plugin overlays inline. Replaces the previous manual sync approach.
+
+- Anchored EXCLUDES patterns to source root
+- Excludes `assets/` directory, added `--bootstrap` flag
+- Aligned `plugin.json` heredoc with current live shape
+- Mirrors `CODE_OF_CONDUCT.md`, drops deprecated `agents/openai.yaml` overlay
+
+### Project Standards Authoring
+
+**project-standards-authoring skill** — new skill for creating project-specific coding standards from existing code and documentation.
+
+- Produces auditable rules/checklists grounded in repository evidence
+- Rules moved to `docs/rules/` with an `agent.md` index step
+- Added templates with "Rule Objective", "When to Use", and "Out of Scope" sections
+- Language conflict guidance in red flags
+- Testing reports for both Cursor and green/red validation scenarios
+
+### Documentation Restructure
+
+**agent.md → CLAUDE.md/AGENTS.md** — eliminated separate `agent.md` file. Harness index content now integrated directly into `CLAUDE.md`/`AGENTS.md`.
+
+- Rules reorganized under `docs/rules/` (was previously `rules/`)
+- Checklists moved under `docs/checklists/`
+- Memory and execution logs under `docs/memory/`
+- Removed vestigial `CHANGELOG.md` (replaced by `RELEASE-NOTES.md`)
+
+### Contributor Guidelines
+
+- Added contributor guidelines to reduce agentic slop PRs — included in `CLAUDE.md` and `AGENTS.md`
+- Added agent-facing guardrails to contributor guidelines
+- Iron law: all skill changes must use `writing-skills`
+
+### Bug Fixes
+
+- **harness environment design** — resolved issues with Harness index placement and rule templates
+- **test script** — prevented `set -e` from aborting test script on FAIL counter increment
+- **Discord invite link** — fixed broken link
+
+### v5.0.7 (2026-03-31)
 
 ### GitHub Copilot CLI Support
 
