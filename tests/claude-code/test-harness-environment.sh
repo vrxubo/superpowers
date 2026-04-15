@@ -11,10 +11,10 @@ check() {
     local condition="$2"
     if eval "$condition"; then
         echo "PASS: ${desc}"
-        ((PASS++))
+        ((PASS++)) || true
     else
         echo "FAIL: ${desc}"
-        ((FAIL++))
+        ((FAIL++)) || true
     fi
 }
 
