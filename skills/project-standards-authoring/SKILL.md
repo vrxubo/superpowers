@@ -20,7 +20,7 @@ NO STANDARDS ARTIFACTS BEFORE A HUMAN SELECTS A CLASSIFICATION SCHEME
 If your human partner has not explicitly chosen one of the proposed schemes, you STOP. You do not write or update:
 
 - `docs/rules/${type}.md`
-- `docs/checklist/${type}.md`
+- `docs/checklists/${type}.md`
 - `docs/guides/how-to-create-${type}.md`
 - `docs/resources/reuse-inventory.md`
 
@@ -79,7 +79,7 @@ For each `${type}` in the human-selected scheme:
 | Artifact | Path |
 |----------|------|
 | Rules | `docs/rules/${type}.md` |
-| Checklist | `docs/checklist/${type}.md` |
+| Checklist | `docs/checklists/${type}.md` |
 | Creation guide (conditional) | `docs/guides/how-to-create-${type}.md` |
 
 Use section structures and constraints from `templates.md` in this directory.
@@ -105,9 +105,17 @@ Always produce or update:
 
 One global file for the whole run. Merge carefully if it already exists; do not fork multiple inventories.
 
-### 5) Update agent.md index
+### 5) Update agent index
 
-After all artifacts are generated, maintain an index section in the project root's `agent.md`:
+After all artifacts are generated, maintain an index section in the project's agent guidance file(s):
+
+**Determine which file(s) to update:**
+
+1. If `CLAUDE.md` exists and `AGENTS.md` is a symlink to `CLAUDE.md`: update only `CLAUDE.md`
+2. If both `CLAUDE.md` and `AGENTS.md` exist as independent files (not linked): update both files with the same index block
+3. If only `CLAUDE.md` exists: update it, then create `AGENTS.md` as a symlink to `CLAUDE.md`
+4. If only `AGENTS.md` exists: update it, then create `CLAUDE.md` as a symlink to `AGENTS.md`
+5. If neither exists: create `CLAUDE.md` with the index block, then create `AGENTS.md` as a symlink to `CLAUDE.md`
 
 **Index block format:**
 
@@ -117,17 +125,23 @@ After all artifacts are generated, maintain an index section in the project root
 
 | Type | Rules | Checklist | Guide |
 |------|-------|-----------|-------|
-| api  | [Rules](docs/rules/api.md) | [Checklist](docs/checklist/api.md) | — |
+| api  | [Rules](docs/rules/api.md) | [Checklist](docs/checklists/api.md) | — |
 <!-- END standards-index -->
 ```
 
-**Behavior:**
+**Behavior for each file:**
 
-- If `agent.md` exists and contains `<!-- BEGIN standards-index -->` and `<!-- END standards-index -->` markers: replace all content between them with the new index block (excluding the markers themselves).
-- If `agent.md` exists but markers are not found: append the full index block (including markers) at the end of the file.
-- If `agent.md` does not exist: create it with the full index block as its initial content.
-- Table rows must include one row per selected `${type}`, sorted alphabetically by type name.
-- Columns: `Type`, `Rules`, `Checklist`, `Guide`. Show `—` for artifacts not generated (e.g., no creation guide for a type).
+- If file contains `<!-- BEGIN standards-index -->` and `<!-- END standards-index -->`: replace content between markers
+- If file exists but markers not found: append the full block at end of file
+- If file does not exist: create with the full index block as initial content
+
+Table rows must include one row per selected `${type}`, sorted alphabetically by type name.
+Columns: `Type`, `Rules`, `Checklist`, `Guide`. Show `—` for artifacts not generated (e.g., no creation guide for a type).
+
+**Symlink creation commands:**
+
+- macOS/Linux: `ln -s CLAUDE.md AGENTS.md` (or `ln -s AGENTS.md CLAUDE.md` depending on which is the real file)
+- If a file already exists at the symlink target path, remove it first only if it is itself a symlink pointing to the other file. Never delete a real file without human confirmation.
 
 ### 6) Run quality gates (blocking)
 
@@ -141,7 +155,7 @@ Do not claim completion if any gate fails. Fix artifacts and re-run checks.
 | Language | Soft, non-operational policy ("elegant", "clean", "reasonable") without a testable meaning |
 | Honest gaps | Missing project standard exists but you implied a policy instead of "none found" / explicit gap |
 | Localization | Output language does not match human-requested language without explicit conflict handling |
-| Agent Index | Any generated type lacks a corresponding row in the `agent.md` index table |
+| Agent Index | Any generated type lacks a corresponding row in the agent index file (`CLAUDE.md` or `AGENTS.md`) |
 
 ### 7) Delivery summary
 
@@ -160,9 +174,9 @@ digraph project_standards_authoring {
     "Propose 2-3 schemes" [shape=box];
     "Human picked one?" [shape=diamond];
     "Per type: standards-context-retrieval + Constraints Summary" [shape=box];
-    "Write docs/rules/${type}.md + docs/checklist/${type}.md (+ optional how-to)" [shape=box];
+    "Write docs/rules/${type}.md + docs/checklists/${type}.md (+ optional how-to)" [shape=box];
     "Write reuse-inventory.md" [shape=box];
-    "Update agent.md index" [shape=box];
+    "Update agent index" [shape=box];
     "Quality gates" [shape=box];
     "Delivery summary" [shape=doublecircle];
 
@@ -170,10 +184,10 @@ digraph project_standards_authoring {
     "Propose 2-3 schemes" -> "Human picked one?";
     "Human picked one?" -> "Propose 2-3 schemes" [label="no: STOP"];
     "Human picked one?" -> "Per type: standards-context-retrieval + Constraints Summary" [label="yes"];
-    "Per type: standards-context-retrieval + Constraints Summary" -> "Write docs/rules/${type}.md + docs/checklist/${type}.md (+ optional how-to)";
-    "Write docs/rules/${type}.md + docs/checklist/${type}.md (+ optional how-to)" -> "Write reuse-inventory.md";
-    "Write reuse-inventory.md" -> "Update agent.md index";
-    "Update agent.md index" -> "Quality gates";
+    "Per type: standards-context-retrieval + Constraints Summary" -> "Write docs/rules/${type}.md + docs/checklists/${type}.md (+ optional how-to)";
+    "Write docs/rules/${type}.md + docs/checklists/${type}.md (+ optional how-to)" -> "Write reuse-inventory.md";
+    "Write reuse-inventory.md" -> "Update agent index";
+    "Update agent index" -> "Quality gates";
     "Quality gates" -> "Delivery summary";
 }
 ```
@@ -192,7 +206,7 @@ digraph project_standards_authoring {
 | "Missing standards means I should infer best practice" | Write explicit gaps; do not fabricate policy. |
 | "I can skip rules header; `Scope` is enough" | Missing objective/usage/out-of-scope causes ambiguous applicability; gate fails. |
 | "User asked Chinese but I will keep English for consistency" | Language decision must follow user request or explicit conflict resolution. |
-| "agent.md index is optional" | The index is required for agent discoverability; gate fails if index is missing or incomplete. |
+| "agent index is optional" | The index is required for agent discoverability; gate fails if index is missing or incomplete. |
 
 ## Red Flags - Stop and Restart
 
@@ -206,7 +220,7 @@ digraph project_standards_authoring {
 - You invented constraints where sources said "none found"
 - You wrote rules without objective/when-to-use/out-of-scope header profile
 - You ignored a user language request without explicit conflict handling
-- You did not update `agent.md` index or index is missing/incomplete after generating artifacts
+- You did not update the agent index (`CLAUDE.md`/`AGENTS.md`) or index is missing/incomplete after generating artifacts
 
 **All red flags mean:** stop, return to the earliest failed gate, and repair before proceeding.
 

@@ -6,7 +6,7 @@
 
 | When you need... | Read |
 |---|---|
-| Project coding standards | `docs/rules/agent.md` |
+| Project coding standards | `docs/rules/index.md` |
 | Project architecture & tech stack | `docs/harness/project-architecture.md` |
 | Handle test failures | `docs/memory/failure-patterns.md` |
 | Start a new task | `docs/checklists/pre-task.md` |

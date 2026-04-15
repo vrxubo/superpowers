@@ -1,1 +1,13 @@
-API Error: 404 404 page not found
+Created 7 files in `docs/rules/`:
+
+| File | Covers |
+|------|--------|
+| `agent.md` | Index — links to all rule files |
+| `shell.md` | `.sh` scripts (hooks, test runners, scaffolding) |
+| `javascript.md` | `.js` / `.ts` files (skill utilities, tests, helpers) |
+| `python.md` | `.py` scripts (analysis, test utilities) |
+| `yaml.md` | `.yml` / `.yaml` (GitHub Actions, templates, funding) |
+| `json.md` | `.json` configs (package, plugin manifests, settings) |
+| `markdown.md` | `.md` files (docs, skills, plans, templates) |
+
+Each rule file covers: general conventions, naming, structure patterns, and validation checks specific to that code type. Kept high-level — no deep evidence gathering, just practical standards matching the repo's existing patterns.
