@@ -9,7 +9,7 @@ description: Use when implementation is complete, all tests pass, and you need t
 
 Guide completion of development work by presenting clear options and handling chosen workflow.
 
-**Core principle:** Verify tests → Present options → Execute choice → Clean up.
+**Core principle:** Verify tests → Collect evidence → Present options → Execute choice → Clean up.
 
 **Announce at start:** "I'm using the finishing-a-development-branch skill to complete this work."
 
@@ -36,6 +36,19 @@ Cannot proceed with merge/PR until tests pass.
 Stop. Don't proceed to Step 2.
 
 **If tests pass:** Continue to Step 2.
+
+### Step 1b: Collect execution evidence (if Harness environment exists)
+
+If the project has a Harness environment (`docs/memory/` directory exists), collect execution evidence before presenting options.
+
+**REQUIRED SUB-SKILL: Use superpowers:harness-feedback-loop**
+
+Compare the branch's planned work against actual deliverables. Write:
+- Execution log entry to `docs/memory/execution-log/YYYY-MM-DD.md`
+- Failure pattern to `docs/memory/failure-patterns.md` if any task deviated
+- Success pattern to `docs/memory/success-patterns.md` if any reusable approach emerged
+
+**If `docs/memory/` does not exist:** skip this step silently — the project has no Harness environment.
 
 ### Step 2: Determine Base Branch
 
@@ -164,6 +177,10 @@ git worktree remove <worktree-path>
 - **Problem:** Merge broken code, create failing PR
 - **Fix:** Always verify tests before offering options
 
+**Skipping evidence collection**
+- **Problem:** Harness environment exists but memory files stay empty; no self-evolution
+- **Fix:** If `docs/memory/` exists, run `superpowers:harness-feedback-loop` before presenting options
+
 **Open-ended questions**
 - **Problem:** "What should I do next?" → ambiguous
 - **Fix:** Present exactly 4 structured options
@@ -180,12 +197,14 @@ git worktree remove <worktree-path>
 
 **Never:**
 - Proceed with failing tests
+- Skip evidence collection when Harness environment exists
 - Merge without verifying tests on result
 - Delete work without confirmation
 - Force-push without explicit request
 
 **Always:**
 - Verify tests before offering options
+- Run harness-feedback-loop if docs/memory/ exists
 - Present exactly 4 options
 - Get typed confirmation for Option 4
 - Clean up worktree for Options 1 & 4 only
@@ -198,3 +217,4 @@ git worktree remove <worktree-path>
 
 **Pairs with:**
 - **using-git-worktrees** - Cleans up worktree created by that skill
+- **harness-feedback-loop** - Collects execution evidence before finishing (Step 1b)
