@@ -66,6 +66,10 @@ PRs containing multiple unrelated changes will be closed. Split them into separa
 
 ## Skill Changes Require Evaluation
 
+**IRON LAW: No skill creation, modification, or deletion without using `superpowers:writing-skills`.**
+
+This applies to ALL skill changes — new skills, edits to existing skills, and removal of skills. Direct edits to `skills/**/SKILL.md` files are forbidden.
+
 Skills are not prose — they are code that shapes agent behavior. If you modify skill content:
 
 - Use `superpowers:writing-skills` to develop and test changes
