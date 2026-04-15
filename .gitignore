@@ -8,3 +8,8 @@ triage/
 # Cursor Hooks 配置（由插件自动生成，不应提交到版本控制）
 .cursor/hooks
 .cursor/hooks.json
+# Exception: harness hooks are part of the project and should be committed
+!.cursor/hooks/harness-post-task.sh
+
+# Claude Code hooks - allow harness hooks to be committed
+!.claude/hooks/harness-post-task.sh
