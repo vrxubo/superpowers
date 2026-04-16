@@ -272,6 +272,6 @@ Run `harness-knowledge-discovery` first to get the blueprint. Then run `project-
 - You didn't create `docs/memory/` placeholder files
 - You didn't create or register the post-task hook (`harness-post-task.sh` in hooks.json)
 - You didn't ensure `CLAUDE.md` and `AGENTS.md` exist with the full Harness index content
-- 你在 `standards-index` 区域填充了任何内容（该区域应由 `project-standards-authoring` 填充）
+- You filled the `standards-index` region with any content (this region should be populated by `project-standards-authoring`)
 
 All red flags mean: re-scan the project, check what actually exists, and tailor recommendations.
