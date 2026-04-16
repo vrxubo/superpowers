@@ -152,13 +152,8 @@ After generating the blueprint, create the project's agent guidance file. This f
 - **Code review** → read `docs/checklists/code-review.md` + `docs/rules/*.md`
 - **Task complete** → execute `docs/checklists/post-task.md` + write to `docs/memory/execution-log/`
 
-## Rules Sub-Index
-
-| Rule Type | File |
-|---|---|
-| (populated by project-standards-authoring) | `docs/rules/` |
-
 <!-- BEGIN standards-index -->
+<!-- 留空。由 project-standards-authoring skill 填充分类索引表格 -->
 <!-- END standards-index -->
 ```
 
@@ -277,5 +272,6 @@ Run `harness-knowledge-discovery` first to get the blueprint. Then run `project-
 - You didn't create `docs/memory/` placeholder files
 - You didn't create or register the post-task hook (`harness-post-task.sh` in hooks.json)
 - You didn't ensure `CLAUDE.md` and `AGENTS.md` exist with the full Harness index content
+- 你在 `standards-index` 区域填充了任何内容（该区域应由 `project-standards-authoring` 填充）
 
 All red flags mean: re-scan the project, check what actually exists, and tailor recommendations.
